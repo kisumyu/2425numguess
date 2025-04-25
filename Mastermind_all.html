@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.button {
+  background-color: #fdd441;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(0, 0, 0);
+  padding: 15px 32px;
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  
+}
+body {
+ font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, sans-serif;
+ margin: 0;
+ padding: 20px;
+ text-align: center;
+}
+h2{
+  padding-bottom: 3%;
+  font-size: 25px;
+  text-align: center;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, sans-serif
+}
+.button-container {
+  text-align: center;
+  margin: 15px; 
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px; 
+}
+input[type="text"] {
+  margin: 1px;
+  padding: 10px;
+  font-size: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+ text-align: center; 
+}
+
+#feedback {
+ text-align: center;
+ margin-top: 20px;
+ font-size: 10px;
+ text-align: center;
+ font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', s
+ 
+}
+
+#attempts {
+  text-align: center;
+  margin-top: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<h2>MASTERMIND</h2>
+<p>Start by entering 4 random numbers from 1-6.</p>
+<p>Guess the numbers like in Mastermind!</p>
+<p>You have 10 attempts to guess the correct combination.</p>
+
+<form>
+  <label for="fname"></label>
+  <input type="text" id="input1"  placeholder="input 1" maxlength="1"><br>
+  <input type="text" id="input2"  placeholder="input 2" maxlength="1"><br>
+  <input type="text" id="input3"  placeholder="input 3" maxlength="1"><br>
+  <input type="text" id="input4"  placeholder="input 4" maxlength="1"><br>
+</form>
+
+<div>
+<div class="button-container">
+  <input type="button" class="button" value="Guess" onclick="makeGuess()">
+</div>
+
+<div id="feedback"></div>
+<div id="attempts"></div>
+
+<script>
+  const code = Array.from({ length: 4 }, () => Math.floor(Math.random() * 6) + 1);
+ let attempts = 0
+
+ function makeGuess() {
+  const guess = [
+    Number(document.getElementById('input1').value),
+    Number(document.getElementById('input2').value),
+    Number(document.getElementById('input3').value),
+    Number(document.getElementById('input4').value),
+  ];
+   attempts++;
+ let correctPosition =0;
+ let correctNumber =0;
+
+ for (let i = 0; i < 4; i++) {
+   if (code.includes(guess[i])){
+       correctNumber++;
+       //problem in here
+  } 
+   if (guess[i] == code[i]) {
+        correctPosition++;   
+  }
+ }
+ document.getElementById('feedback').innerText = 
+ `Correct position: ${correctPosition}, Correct number: ${correctNumber}
+ `;
+        document.getElementById('attempts').innerText = `Attempts: ${attempts} /10`;
+
+  
+   if (correctPosition === 4) {
+      alert("Congratulations! You've guessed the code!");
+       resetGame();
+   } else if (attempts === 10) {
+      alert(`Game over! The code was: ${code.join(", ")}`);
+       resetGame();
+        }
+    }
+    function resetGame() {
+        document.getElementById('input1').value = '';
+        document.getElementById('input2').value = '';
+        document.getElementById('input3').value = '';
+        document.getElementById('input4').value = '';
+
+        attempts = 0;
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('attempts').innerText = '';
+    }
+ 
+</script>
+</body>
+</html>
+

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                background:url(https://i.giphy.com/media/3NtY188QaxDdC/giphy.gif);
+                background-repeat: no-repeat;
+                background-size: 400px 300px;
+            }
+        </style>
+    </head>
+
+<body>
+    
+    <h1>Number Guessing Game</h1>
+    <h3><p id="instruction">Set the range for your guessing game:</p></h3>
+    <input type="number" id="min" placeholder="Minimum" required class="glow_input">
+    <input type="number" id="max" placeholder="Maximum" required class="glow_input">
+    <button id="start" onclick="startgame()" style="background-color:rgb(0, 255, 255)">Set Range & Start Game</button>
+    <p id="error"></p>
+
+    <div id="gameSection" style="display: none;">
+        <h2><p>Guess a number between <span id="range"></span>:</p></h2>
+        <p id="try"></p>
+        <input type="number" id="guess" class="glow_input">
+        <button onclick="guess()" style="background-color: orange;">Submit Guess</button>
+        <p id="result"></p>
+        <button id="restart" onclick="again()" style="background-color: greenyellow;">Play Agian</button><p></p>
+        <button id="leave" onclick="leave()" style="background-color: red;">Leave</button><p></p>
+    </div>
+
+    <script>
+        var rand_num=0;
+        var time=0;
+        var max='',min='';
+        var finished=false;
+
+        function startgame(){
+            min = parseInt(document.getElementById('min').value);
+            max = parseInt(document.getElementById('max').value);
+
+            if (min >= max) {
+                alert('Minimum must be less than maximum!');
+                document.getElementById("error").textContent="Enter Again!";
+                return;
+            }
+            if(document.getElementById('min').value===""||document.getElementById('max').value===""){
+                alert("Please input maximum or minimum range");
+                return;
+            }
+
+            rand_num = Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
+
+            // hide game setting
+            document.getElementById("instruction").style.display='none';
+            document.getElementById("min").style.display='none';
+            document.getElementById("max").style.display='none';
+            document.getElementById("start").style.display='none';
+            document.getElementById("error").style.display='none';
+
+            // show guessing page
+            document.getElementById('range').textContent=`${min} and ${max}`;
+            document.getElementById('gameSection').style.display='block';
+            document.getElementById("restart").style.display='none';
+            document.getElementById('guess').value='';
+        }
+
+        function guess(){
+            const userin = parseInt(document.getElementById('guess').value);
+            if(!finished) time++;
+
+            if(userin < min || userin > max) {
+                document.getElementById("result").textContent=`Please enter a number between ${min} and ${max}.`;
+                time--;
+            }
+            else if(userin==rand_num){
+                document.getElementById("result").textContent=`Congratulations! You've guessed the right number in ${time} attempts!`;
+                document.getElementById("restart").style.display='inline-block';
+                finished=true
+                return;
+            }
+            else if(userin<rand_num){
+                document.getElementById("result").textContent=`Too low! Try again.${rand_num}`;
+            }
+            else if(userin>rand_num){
+                document.getElementById("result").textContent=`Too high! Try again.${rand_num}`;
+            }
+            else{
+                document.getElementById("result").textContent=`Please enter a number`;
+                time--;
+            }
+            if(time!=0){
+                document.getElementById("try").textContent=`Time tried:${time}`;
+            }
+        }
+
+        function leave(){
+            if(confirm("Are You Sure To Leave?")){
+                again();
+                return;
+            }
+            else{
+                return;
+            }
+        }
+
+        function again(){
+            document.getElementById("instruction").style.display='inline-block';
+            document.getElementById("min").style.display='inline-block';
+            document.getElementById("max").style.display='inline-block';
+            document.getElementById("start").style.display='block';
+            document.getElementById("error").style.display='block';
+
+            document.getElementById('range').textContent='none';
+            document.getElementById('gameSection').style.display='none';
+            document.getElementById("restart").style.display='none';
+            document.getElementById('guess').value='';
+            document.getElementById("result").style.display='none';
+        }
+    </script>
+</body>
