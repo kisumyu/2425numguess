@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffeef5; /* pink bg */
+            color: #333;
+        }
+
+        h2, h3 {
+            font-family: 'Comic Sans MS', cursive;
+            color: #555;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Input and Button Styles */
+        .glow_input {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 90%;
+            max-width: 300px;
+            font-size: 1rem;
+            border: 2px solid #ffcce0; 
+            border-radius: 10px;
+            outline: none;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: box-shadow 0.3s;
+        }
+
+        .glow_input:focus {
+            box-shadow: 0 0 10px #ffb3c6; 
+        }
+
+        .glow_button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #ccffcc; 
+            color: #333;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .glow_button:hover {
+            background-color: #b3e6b3; 
+            box-shadow: 0 0 10px #ccffcc; 
+        }
+
+        #n_result {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* respon box */
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <h2><p id="heading">DONT LET THE NUMBER BOMB EXPLODE!!</p></h2>
+        <h3><p id="single_instruction">Set the range for your guessing game:</p></h3>
+        <!-- Game Settings -->
+        <input type="number" id="n_min" placeholder="Minimum" required class="glow_input">
+        <input type="number" id="n_max" placeholder="Maximum" required class="glow_input">
+        <input type="number" id="n_time" placeholder="Chances to win" required class="glow_input">
+        <button id="n_start" onclick="startsinglegame()" class="glow_button">Set Range & Start Game</button>
+
+        <!-- Guessing Section -->
+        <div id="single_game" class="hidden">
+            <h2><p>Guess a number between <span id="n_range"></span>:</p></h2>
+            <p id="n_try"></p>
+            <input type="number" id="n_guess" class="glow_input">
+            <button onclick="single_guess()" class="glow_button">Submit Guess</button>
+            <p id="n_result"></p>
+            <button id="n_restart" onclick="location.reload()" class="glow_button hidden">Restart Game</button>
+        </div>
+    </div>
+
+    <script>
+        let min, max, rand_num,last_guese ,finished, valid = false;
+        let win = ["Well done!", "You are lucky~", "Congragulation!"];
+        function startsinglegame() {
+            min = parseInt(document.getElementById('n_min').value);
+            max = parseInt(document.getElementById('n_max').value);
+            time = parseInt(document.getElementById('n_time').value)
+            
+            if (document.getElementById('n_min').value === "" || document.getElementById('n_max').value === "" || document.getElementById('n_time').value === "") {
+                alert("Please input minimum / maximum  / chances values.");
+                return;
+            }else if (min <1 || max < 1){
+                alert("Minimum and maximum must be greater than 1.");
+                return;
+            }else if (min >= max) {
+                alert("Maximum must be greater than minimum.");
+                return;
+            }
+            if (time > (max - min + 1) || time < 2) {
+                alert("Chances must be between 2 & " + (max-min +1) +"!" );
+                return;
+            }
+
+            rand_num = Math.floor(Math.random() * (max - min + 1)) + min;
+            a = Math.floor(Math.random() *3);
+            hi = win[a];
+            
+            // Hide game settings
+            document.getElementById("n_min").style.display = 'none';
+            document.getElementById("n_max").style.display = 'none';
+            document.getElementById("n_time").style.display = 'none';
+            document.getElementById("n_start").style.display = 'none';
+
+            // Show guessing page
+           document.getElementById('n_range').textContent = `${min} and ${max}`;
+            document.getElementById('single_game').style.display = 'block';
+        }
+
+        function single_guess() { 
+          
+            if (finished==true || time < 1){
+              alert ("Game has already ended.")
+              return;
+            }
+            
+            const userin = parseInt(document.getElementById('n_guess').value);
+            
+            valid = false;
+            time = time - 1;
+            
+            if (userin < min || userin > max ) {
+                alert ("Please enter a number between "+ min + "and" +max +".");
+                return;
+            } else if (userin == last_guese){
+              alert("Please enter a new number.");
+              return;
+            }else if (userin < rand_num) {
+                valid = true ;
+                min = userin;
+            } else if (userin > rand_num) {
+                valid = true ;
+                max = userin;
+            } else if (userin === rand_num) {
+                finished = true;
+            }
+            if (finished == true){
+               document.getElementById("n_result").textContent = `BOOOOOM!!!!! You lose! .`;
+            }else if(time == 0){
+              document.getElementById("n_result").textContent = `YOU WON!!!!!! The bomb is ${rand_num}.${hi}`;
+              finished = true;
+            }else if (valid == true){
+              document.getElementById("n_result").textContent = `Please enter a number between ${min} and ${max}.` +"   "  +`${time} Chance(s) are left.`;
+            
+            }else { 
+                document.getElementById("n_result").textContent = `Please enter a valid number.`;
+            }
+            
+            last_guese = userin; 
+         
+        }
+    </script>
+</body>
+</html>

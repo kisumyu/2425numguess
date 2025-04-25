@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Number Guessing Game</title>
+    <style>
+    body {
+      text-align: center;
+      background: url("https://s.yimg.com/ny/api/res/1.2/pkDVEZ1edfCKyC1_M6EO7Q--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQyOA--/https://media.zenfs.com/ko/bossmind_356/e515d212f931680b649df12979085e1e");
+      background-size: cover;
+      background-position: center;
+      color: cyan;
+      font-family: helvetica;
+    }
+    p {
+      font-size: 30px;
+    }
+    input{
+      border:0;
+      padding: 11px;
+      font-size: 47px;
+      
+    }
+    input[type="submit"] {
+      background: red;
+      color: cyan;
+    /* <length> values */
+     vertical-align: 4em;
+    }
+  </style>
+	<script>//**************************************************************
+//These utility codes should be put in front of the main program
+//**************************************************************
+
+//return an integer random number from a to b inclusive
+function genRandom() {
+	
+	n = Math.floor(Math.random() * 20) + 1;
+	return n;
+	
+}
+
+
+
+//reuturn True if input number is valid
+function isInputValid(x) {
+	
+	//if x is outside of the range or x is not a number
+	// || means OR, && means AND
+	if ( x < 1 || x > 100 || isNaN(x) )
+		return false
+	
+	return true;
+	
+}
+
+
+//change backgroung color
+function changeBackground(color) {
+   
+   document.body.style.background = color;
+   
+}</script>
+  </head>
+  <body>
+    <h1>Number Guessing Game</h1>
+    <p>Guess a number between 1 and 100:</p>
+    <input type="text" id="guess" />
+    <button id="submit">Submit</button>
+    <p id="message"></p>
+    <button id="reset">Reset</button>
+	
+	<!-- insert the main program js code here-->
+    <script>// Generate a random number between 1 and 100
+let randomNumber = genRandom(1,100);
+
+// Initialize the number of attempts to 0
+let attempts = 0;
+
+// Get references to the HTML elements
+const guessInput = document.getElementById("guess");
+const submitButton = document.getElementById("submit");
+const resetButton = document.getElementById("reset");
+const message = document.getElementById("message");
+
+// Add an event listener to the submit button
+submitButton.addEventListener("click", function() {
+  // Get the user's guess from the input field
+  const guess = Number(guessInput.value);
+
+  // Check if the guess is valid
+  if ( isInputValid(guess) == false ) {
+    message.innerText = "Please enter a valid number between 1 and 20.";
+  } else {
+    // Increase the number of attempts
+    attempts = attempts + 1;
+
+    // Check if the guess is correct
+    if (guess === randomNumber) {
+      message.innerText = `Congratulations! You guessed the correct number in ${attempts} attempts.`;
+	  changeBackground('lightgreen');
+      submitButton.disabled = true;
+    } else if (guess > randomNumber) {
+      message.innerText = "Too high! Guess a lower number.";
+    } else {
+      message.innerText = "Too low! Guess a higher number.";
+    }
+  }
+});
+
+// Add an event listener to the reset button
+resetButton.addEventListener("click", function() {
+  // Reset the game
+  randomNumber = genRandom();
+  attempts = 0;
+  guessInput.value = "";
+  message.innerText = "";
+  submitButton.disabled = false;
+});
+
+
+// Add an event listener to the reset button
+resetButton.addEventListener("click", function() {
+  // Reset the game
+  randomNumber = genRandom();
+  attempts = 0;
+  guessInput.value = "";
+  message.innerText = "";
+  submitButton.disabled = false;
+});</script>
+	
+	
+  </body>
+</html>
